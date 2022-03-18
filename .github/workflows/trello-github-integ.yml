@@ -7,7 +7,6 @@ on:
     types: [created, edited, deleted]
 jobs:
   issue_comment_integration:
-    if: ${{ github.event_name == 'issue_comment' }}
     runs-on: ubuntu-latest
     name: Integrate Issue Comment
     env:

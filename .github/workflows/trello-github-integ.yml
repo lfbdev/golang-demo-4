@@ -19,57 +19,23 @@ jobs:
       TRELLO_DONE_LIST_ID: ${{ secrets.TRELLO_DONE_LIST_ID }}
       TRELLO_MEMBER_MAP: ${{ secrets.TRELLO_MEMBER_MAP }}
     steps:
-      - name: Add Comment
-        id: comment-create
-        if: ${{ github.event.action == 'created' }}
-        uses: CyanRYi/trello-github-integration@v3.0.0
+      - name: Link to Trello
+        uses: kagof/trello-link-github-action@v1.1.0
         with:
-          trello-action: add_comment
-      - name: Edit Comment
-        id: comment-edit
-        if: ${{ github.event.action == 'edited' }}
-        uses: CyanRYi/trello-github-integration@v3.0.0
-        with:
-          trello-action: edit_comment
-      - name: Delete Comment
-        id: comment-delete
-        if: ${{ github.event.action == 'deleted' }}
-        uses: CyanRYi/trello-github-integration@v3.0.0
-        with:
-          trello-action: delete_comment
-  issue_integration:
-    if: ${{ github.event_name == 'issues' }}
-    runs-on: ubuntu-latest
-    name: Integrate Issue
-    env:
-      TRELLO_API_KEY: ${{ secrets.TRELLO_API_KEY }}
-      TRELLO_API_TOKEN: ${{ secrets.TRELLO_TOKEN }}
-      TRELLO_BOARD_ID: ${{ secrets.TRELLO_BOARD_ID }}
-      TRELLO_TODO_LIST_ID: ${{ secrets.TRELLO_TODO_LIST_ID }}
-      TRELLO_DONE_LIST_ID: ${{ secrets.TRELLO_DONE_LIST_ID }}
-      TRELLO_MEMBER_MAP: ${{ secrets.TRELLO_MEMBER_MAP }}
-    steps:
-      - name: Create Card
-        id: card-create
-        if: ${{ github.event.action == 'opened' }}
-        uses: CyanRYi/trello-github-integration@v3.0.0
-        with:
-          trello-action: create_card
-      - name: Edit Card
-        id: card-edit
-        if: ${{ github.event.action == 'edited' }}
-        uses: CyanRYi/trello-github-integration@v3.0.0
-        with:
-          trello-action: edit_card
-      - name: Close Card
-        id: card-move-to-done
-        if: ${{ github.event.action == 'closed' }}
-        uses: CyanRYi/trello-github-integration@v3.0.0
-        with:
-          trello-action: move_card_to_done
-      - name: Reopen Card
-        id: card-move-to-backlog
-        if: ${{ github.event.action == 'reopened' }}
-        uses: CyanRYi/trello-github-integration@v3.0.0
-        with:
-          trello-action: move_card_to_todo
+          # Required.
+          # Allowed to be one of the following:
+          # 1. the board name
+          # 2. the board shortLink (can be found in the URL)
+          # 3. the boardId (can be found via the Trello REST API)
+          board-identifier: 623497eda12f8e1220cb5738
+          # Required
+          # Secret token used to contact Trello
+          trello-token: 6f62f9b9f886a39d1de36242882c5eb5122fd754321ec4b28b80fe548994d95c
+          # Optional (default 'TRELLO-')
+          # When preceding a string in a commit message or PR body or title,
+          # indicates that the string is a Trello shortId.
+          # May be either:
+          # 1. an alpha string, eg TRELLO
+          # 2. an alpha string followed by a dash, eg TRELLO-
+          # 3. one of the characters ! @ # $ % ^ & * + = (note: must be exactly 1 char long)
+          marker: 'TRELLO-'
